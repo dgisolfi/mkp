@@ -3,6 +3,8 @@
 repo=`grep __title__ ./mkp/__version__.py | grep -o '"[^"]\+"' | cut -d '"' -f2`
 version=`grep __version__ ./mkp/__version__.py | grep -o '"[^"]\+"' | cut -d '"' -f2`
 
+make: intro build install
+
 intro:
 	@echo "$(repo) v$(version)"
 
@@ -19,7 +21,7 @@ clean:
 test:
 	@python3 -m pytest -W 
 
-build: init doc
+build: init
 	-pipenv run pipenv-setup sync
 	@python3 setup.py sdist bdist_wheel
 
@@ -36,9 +38,5 @@ sort_imports:
 	isort -rc --atomic .
 	# if this fails run pipenv shell and install dev 
 
-MAKE:
-	intro
-	build
-	install
 
 .PHONY: intro init clean test build publish install uninstall sort_imports

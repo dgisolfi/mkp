@@ -16,7 +16,7 @@ def createExample(ctx: click.Context, param: click.Parameter, value):
     try:
         click.echo("writing example data...")
         file = open("./players.txt", "w+")
-        file.writelines(players)
+        file.writelines(players.lstrip())
         file.close()
         click.echo("done.\n")
         click.echo(
