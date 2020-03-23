@@ -10,14 +10,14 @@ from mkp.object import Object
 class Parser:
     def __init__(self, filename):
         self.filename = filename
-        self.__commands = []
+        self.__lines = []
         self.__avg_value = 0
         self.__objects = []
         self.parse()
 
     @property
-    def commands(self):
-        return self.__commands
+    def lines(self):
+        return self.__lines
 
     @property
     def avg_value(self):
@@ -38,27 +38,27 @@ class Parser:
     def getCmds(self, filename):
         try:
             file = open(filename, "r")
-            commands = file.readlines()
+            lines = file.readlines()
             file.close()
-            return commands
+            return lines
         except Exception as e:
             print(f"Error: {e}")
             sys.exit(1)
 
     def clean(self):
-        self.__commands = [re.sub(r"\n", "", line) for line in self.__commands]
-        self.__commands = [re.sub(r"^--.*$", "", line) for line in self.__commands]
-        self.__commands = [i for i in self.__commands if i]
+        self.__lines = [re.sub(r"\n", "", line) for line in self.__lines]
+        self.__lines = [re.sub(r"^--.*$", "", line) for line in self.__lines]
+        self.__lines = [i for i in self.__lines if i]
 
     def parse(self):
-        # Get all commands from the file
-        self.__commands = self.getCmds(self.filename)
-        # Remove the comments and line breaks from the commands
+        # Get all lines from the file
+        self.__lines = self.getCmds(self.filename)
+        # Remove the comments and line breaks from the lines
         self.clean()
 
         total_value = 0
         # parse all spices and knapsacks
-        for cmd in self.commands:
+        for cmd in self.lines:
             elements = cmd.strip().split(";")
             elements = [i for i in elements if i]
             self.objects.append(

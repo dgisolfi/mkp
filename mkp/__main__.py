@@ -1,10 +1,33 @@
 #!/usr/bin/env python3
 
+import sys
+
 import click
 
 from mkp import __title__, __version__
 from mkp.algorithm import GreedyAlgorithm
 from mkp.utils.parser import Parser
+from mkp.utils.example import players
+
+
+def createExample(ctx: click.Context, param: click.Parameter, value):
+    if not value or ctx.resilient_parsing:
+        return
+    try:
+        click.echo("writing example data...")
+        file = open("./players.txt", "w+")
+        file.writelines(players)
+        file.close()
+        click.echo("done.\n")
+        click.echo(
+            "To run the example, pass in the following parameters to the cli:\n-f ./players.txt\n-k 5\n-c 3"
+        )
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        ctx.exit()
 
 
 @click.command()
@@ -19,6 +42,19 @@ from mkp.utils.parser import Parser
     message="You are using version %(version)s of %(prog)s",
 )
 
+# -e, --examples
+@click.option(
+    "-e",
+    "--examples",
+    required=False,
+    is_flag=True,
+    expose_value=False,
+    is_eager=True,
+    callback=createExample,
+    default=False,
+    help="Generate example files",
+)
+
 # -k, --knapsacks
 @click.option(
     "-k",
@@ -29,14 +65,14 @@ from mkp.utils.parser import Parser
     help="The total number of knapsacks to fill",
 )
 
-# -s, --size
+# -c, --capacity
 @click.option(
-    "-s",
-    "--size",
-    "knapsack_size",
+    "-c",
+    "--capacity",
+    "knapsack_capacity",
     required=True,
     type=int,
-    help="The size of each knapsack",
+    help="The capacity of each knapsack",
 )
 
 # -f, --file
@@ -50,27 +86,33 @@ from mkp.utils.parser import Parser
     help="Path to objects for knapsacking",
 )
 def main(**kwargs):
-    print(kwargs)
-
+    # parse the data
     parser = Parser(kwargs["file"])
 
-    # try:
-    objects = parser.objects
-    avg_value = parser.avg_value
+    try:
+        objects = parser.objects
+        avg_value = parser.avg_value
 
-    objects.sort(key=lambda x: x.value, reverse=True)
-    # (len(players) // kwargs)
-    # players: list, knapsacks: int, team_size: int, average_value
-    teams = GreedyAlgorithm(
-        objects,
-        kwargs["knapsacks"],
-        kwargs["knapsack_size"],
-        avg_value * kwargs["knapsack_size"],
-    ).teams
-    # except Exception as e:
-    #     print(f'Error: {e}')
+        # Check if the users put in valid values
+        if (len(objects) // kwargs["knapsacks"]) != kwargs["knapsack_capacity"]:
+            click.echo(
+                "Error: the number of objects does not match the given number of knapsacks and capacity of each knapsack"
+            )
+            sys.exit(1)
 
-    print(teams)
+        objects.sort(key=lambda x: x.value, reverse=True)
+        knapsacks = GreedyAlgorithm(
+            objects,
+            kwargs["knapsacks"],
+            kwargs["knapsack_capacity"],
+            avg_value * kwargs["knapsack_capacity"],
+        ).knapsacks
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        for i, knapsack in enumerate(knapsacks):
+            print(f"Knapsack {i+1}: {knapsack}")
 
 
 if __name__ == "__main__":

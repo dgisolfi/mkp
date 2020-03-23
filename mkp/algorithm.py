@@ -4,38 +4,44 @@
 
 
 class GreedyAlgorithm:
-    def __init__(self, objects: list, knapsacks: int, team_size: int, average_value):
-        self.__objects = objects
-        self.__teams = [[None for x in range(team_size)] for y in range(knapsacks)]
+    def __init__(
+        self, objects: list, knapsacks: int, knapsack_size: int, average_value
+    ):
+        self.num_of_knapsacks = knapsacks
+        self.knapsack_size = knapsack_size
         self.__average_value = average_value
+        self.__objects = objects
+        self.__knapsacks = [
+            [None for x in range(knapsack_size)] for y in range(knapsacks)
+        ]
         self.used_objects = []
         self.fillKnapsacks()
 
     @property
-    def teams(self):
-        return self.__teams
+    def knapsacks(self):
+        return self.__knapsacks
 
-    @teams.setter
-    def teams(self, team):
-        self.__teams = team
+    @knapsacks.setter
+    def knapsacks(self, knapsack):
+        self.__knapsacks = knapsack
 
     def append(self, val):
-        self.teams = self.teams + [val]
-        return self.teams
+        self.knapsacks = self.knapsacks + [val]
+        return self.knapsacks
 
     def fillKnapsacks(self):
         adding_objects = True
-        player_index = 0
-        team_index = 0
+        object_index = 0
+        knapsack_index = 0
         loop = 0
         while adding_objects:
-            self.teams[team_index][player_index] = self.__objects.pop(0)
+            self.knapsacks[knapsack_index][object_index] = self.__objects.pop(0)
 
-            if team_index is 4:
-                player_index += 1
+            if knapsack_index is self.num_of_knapsacks - 1:
+                object_index += 1
                 loop += 1
-                team_index = 0
-                if loop is 3:
+                knapsack_index = 0
+                if loop is self.knapsack_size:
                     adding_objects = False
             else:
-                team_index += 1
+                knapsack_index += 1
