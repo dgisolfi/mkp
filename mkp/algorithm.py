@@ -1,19 +1,43 @@
 #!/usr/bin/env python3
-"""
+
+"""A basic greedy algorithim to solve the multidimensional 0–1 knapsack problem
+
+
+Author(s)
+---------
+Daniel Gisolfi <Daniel.Gisolfi1@marist.edu>
 """
 
 
 class GreedyAlgorithm:
+    """Basic Greedy Algorithim
+    
+    Attributes
+    ----------
+    knapsacks : List[list]
+        all knapsacks in a list
+    """
+
     def __init__(
-        self, objects: list, knapsacks: int, knapsack_size: int, average_value
+        self, objects: list, knapsacks: int, capacity: int, average_value: int
     ):
+        """
+        Parameters
+        ----------
+        objects : list
+            elements to be stored in a knapsack
+        knapsacks : int
+            number of knapsacks
+        capacity : int
+            how much a knapsack can hold
+        average_value : int
+            average of all object values
+        """
         self.num_of_knapsacks = knapsacks
-        self.knapsack_size = knapsack_size
+        self.capacity = capacity
         self.__average_value = average_value
         self.__objects = objects
-        self.__knapsacks = [
-            [None for x in range(knapsack_size)] for y in range(knapsacks)
-        ]
+        self.__knapsacks = [[None for x in range(capacity)] for y in range(knapsacks)]
         self.used_objects = []
         self.fillKnapsacks()
 
@@ -30,6 +54,7 @@ class GreedyAlgorithm:
         return self.knapsacks
 
     def fillKnapsacks(self):
+        """goes through all objects and fills each knapsack with the best choice at the time """
         adding_objects = True
         object_index = 0
         knapsack_index = 0
@@ -41,7 +66,7 @@ class GreedyAlgorithm:
                 object_index += 1
                 loop += 1
                 knapsack_index = 0
-                if loop is self.knapsack_size:
+                if loop is self.capacity:
                     adding_objects = False
             else:
                 knapsack_index += 1

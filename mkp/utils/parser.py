@@ -1,14 +1,34 @@
 #!/usr/bin/env python3
-# 2019-5-5
+
+"""Parses the lines of a given file
+
+
+Author(s)
+---------
+Daniel Gisolfi <Daniel.Gisolfi1@marist.edu>
+"""
 
 import re
 import sys
 
+from Typing import List
 from mkp.object import Object
 
 
 class Parser:
-    def __init__(self, filename):
+    """parses a file
+    
+    Attributes
+    ----------
+    lines : List[str]
+        lines of the file given file
+    avg_value : int
+        the average value of each object
+    objects : List[Objects]
+        a list of the read in objects
+    """
+
+    def __init__(self, filename: str):
         self.filename = filename
         self.__lines = []
         self.__avg_value = 0
@@ -35,7 +55,19 @@ class Parser:
     def objects(self, objs):
         self.__objects = objs
 
-    def getCmds(self, filename):
+    def read(self, path: str) -> List[str]:
+        """reads all lines in from a file
+        
+        Parameters
+        ----------
+        path : str
+            path to the file
+        
+        Returns
+        -------
+        List[str]
+            all lines of the file
+        """
         try:
             file = open(filename, "r")
             lines = file.readlines()
@@ -46,13 +78,15 @@ class Parser:
             sys.exit(1)
 
     def clean(self):
+        """cleans all commments, empty lines and line breaks from the data """
         self.__lines = [re.sub(r"\n", "", line) for line in self.__lines]
         self.__lines = [re.sub(r"^--.*$", "", line) for line in self.__lines]
         self.__lines = [i for i in self.__lines if i]
 
     def parse(self):
+        """ Creates all data as Objects to be used by the algorithim """
         # Get all lines from the file
-        self.__lines = self.getCmds(self.filename)
+        self.__lines = self.read(self.filename)
         # Remove the comments and line breaks from the lines
         self.clean()
 

@@ -10,7 +10,18 @@ from mkp.utils.parser import Parser
 from mkp.utils.example import players
 
 
-def createExample(ctx: click.Context, param: click.Parameter, value):
+def createExample(ctx: click.Context, param: click.Parameter, value: str):
+    """creates example object data
+    
+    Parameters
+    ----------
+    ctx : click.Context
+        the context object provided by click and required for a callback function
+    param : click.Parameter
+        the parameteres passed with the example flag. required for a callback function, but not used
+    value : str
+        the value passed with the example flag. required for a callback function, checked if flag was specified
+    """
     if not value or ctx.resilient_parsing:
         return
     try:

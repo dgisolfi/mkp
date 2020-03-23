@@ -13,5 +13,5 @@ __description__ = (
 __url__ = "https://github.com/dgisolfi/mkp"
 __build__ = 0x00110
 __author__ = "Daniel Gisolfi"
-__author_email__ = "Daniel.Gisolfi@ibm.com"
+__author_email__ = "Daniel.Gisolfi1@marist.edu"
 __license__ = "MIT License"
