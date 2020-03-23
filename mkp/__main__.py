@@ -25,13 +25,13 @@ def createExample(ctx: click.Context, param: click.Parameter, value: str):
     if not value or ctx.resilient_parsing:
         return
     try:
-        click.echo("writing example data...")
+        click.echo("🎒 writing example data...")
         file = open("./players.txt", "w+")
         file.writelines(players.lstrip())
         file.close()
-        click.echo("done.\n")
+        click.echo("🎒 done.\n")
         click.echo(
-            "To run the example, pass in the following parameters to the cli:\n-f ./players.txt\n-k 5\n-c 3"
+            "🎒 To run the example, pass in the following parameters to the cli:\n-f ./players.txt\n-k 5\n-c 3"
         )
 
     except Exception as e:
@@ -107,11 +107,12 @@ def main(**kwargs):
         # Check if the users put in valid values
         if (len(objects) // kwargs["knapsacks"]) != kwargs["knapsack_capacity"]:
             click.echo(
-                "Error: the number of objects does not match the given number of knapsacks and capacity of each knapsack"
+                "🎒 Error: the number of objects does not match the given number of knapsacks and capacity of each knapsack"
             )
             sys.exit(1)
-
+        click.echo("🎒 sorting objects")
         objects.sort(key=lambda x: x.value, reverse=True)
+        click.echo("🎒 preforming multidimensional 0–1 knapsack ")
         knapsacks = GreedyAlgorithm(
             objects,
             kwargs["knapsacks"],
@@ -119,11 +120,11 @@ def main(**kwargs):
             avg_value * kwargs["knapsack_capacity"],
         ).knapsacks
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"🎒 Error: {e}")
         sys.exit(1)
     finally:
         for i, knapsack in enumerate(knapsacks):
-            print(f"Knapsack {i+1}: {knapsack}")
+            print(f"🎒 Knapsack {i+1}: {knapsack}")
 
 
 if __name__ == "__main__":

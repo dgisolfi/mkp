@@ -11,7 +11,7 @@ Daniel Gisolfi <Daniel.Gisolfi1@marist.edu>
 import re
 import sys
 
-from Typing import List
+from typing import List
 from mkp.object import Object
 
 
@@ -28,8 +28,8 @@ class Parser:
         a list of the read in objects
     """
 
-    def __init__(self, filename: str):
-        self.filename = filename
+    def __init__(self, path: str):
+        self.path = path
         self.__lines = []
         self.__avg_value = 0
         self.__objects = []
@@ -69,12 +69,12 @@ class Parser:
             all lines of the file
         """
         try:
-            file = open(filename, "r")
+            file = open(self.path, "r")
             lines = file.readlines()
             file.close()
             return lines
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"🎒 Error: {e}")
             sys.exit(1)
 
     def clean(self):
@@ -86,7 +86,7 @@ class Parser:
     def parse(self):
         """ Creates all data as Objects to be used by the algorithim """
         # Get all lines from the file
-        self.__lines = self.read(self.filename)
+        self.__lines = self.read(self.path)
         # Remove the comments and line breaks from the lines
         self.clean()
 
